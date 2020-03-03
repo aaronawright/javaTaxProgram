@@ -105,14 +105,12 @@ public class PaycheckCalculation {
                 if(threshold == 0) // first index means zero tax
                 {
                     fedTax = 0;
-                    System.out.print("No tax");
                 } 
                 else
                 {
                     // calculate based on rows below this index as well as previous column
                     fedTax = taxBracket[1][threshold] + ((taxPay - taxBracket[0][threshold - 1]) * taxBracket[2][threshold]);
-                    System.out.print(fedTax);
-                	
+               
                 }
                 threshold = taxBracket.length; // break out of `for` loop
             }

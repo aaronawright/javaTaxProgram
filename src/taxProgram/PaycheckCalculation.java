@@ -77,8 +77,13 @@ public class PaycheckCalculation {
         double withholdingMultiplier = payPeriod == payPeriodOptions.Biweekly ? withholdingMultiplierBiweekly : withholdingMultiplierMonthly; // get correct multiplier
         double withhouldingAmount = numDependents * withholdingMultiplier; // multiply by number of dependents
         double taxablePay = grossPay - withhouldingAmount; // figure taxable pay as gross minus the withheld amount
+        
         taxBracket = getBracket();
+        
+        
         federalTax = calculateFederalTax(taxablePay);
+       
+    	
         socialSecurityTax = grossPay * socialSecurityMultiplier;
         medicareTax = grossPay * medicareMultiplier;
         netPay = grossPay - federalTax - socialSecurityTax - medicareTax;
@@ -91,27 +96,34 @@ public class PaycheckCalculation {
         /*
         I've replaced the if/else tests with a more efficient for loop
         */
+       
         for(threshold = 0; threshold < taxBracket.length; threshold++) // slight change in .length syntax form C# => java
         {
+        	
             if(taxPay <= taxBracket[0][threshold]) // taxable pay is equal to or below this threshold
             {
                 if(threshold == 0) // first index means zero tax
                 {
                     fedTax = 0;
+                    System.out.print("No tax");
                 } 
                 else
                 {
                     // calculate based on rows below this index as well as previous column
                     fedTax = taxBracket[1][threshold] + ((taxPay - taxBracket[0][threshold - 1]) * taxBracket[2][threshold]);
+                    System.out.print(fedTax);
+                	
                 }
-                break; // break out of `for` loop
+                threshold = taxBracket.length; // break out of `for` loop
             }
         }
+     
         return fedTax;
     }
 
     public double[][] getBracket() // get the right bracket depending on pay period and marital status
     {
+    	
         if(payPeriod == payPeriodOptions.Biweekly)
         {
             if (maritalStatus == maritalStatusOptions.Single)
